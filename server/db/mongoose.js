@@ -5,7 +5,7 @@ if(process.env.PORT){
  connectPath = "ds155473.mlab.com:55473/todoapp11111";
  options= {
      auth: {
-         user: 'MongoUser2',
+         user: 'MongoUser',
          password: 'Pentium12*'
      }
  }
