@@ -5,6 +5,8 @@ const express = require ('express');
 const bodyParser = require ('body-parser');
 const {ObjectID} = require ('mongodb');
 
+
+
 var {mongoose} = require ('./db/mongoose');
 var {Todo} = require ('./models/todo');
 var {User} = require ('./models/user');
@@ -110,6 +112,45 @@ app.post ('/users', (req, res) => {
 app.get('/users/me', authenticate, (req, res) => {
   res.send (req.user);
 })
+
+//POST /users/login {email, password}
+
+
+app.post ('/users/login', (req, res) => {
+     var body = _.pick (req.body, ['email', 'password']);
+     User.findByCredentials (body.email, body.password).then ((user) => {
+       user.generateAuthToken().then ((token) => {
+         res.header('x-auth', token).send (user);
+       });
+     }).catch ((e) => {
+       res.status(400).send();
+     });
+})
+// app.post ('/users/login', (req, res) => {
+//   var body = _.pick (req.body, ['email', 'password']);
+//   var {email} = body;
+//   var {password} = body;
+//    User.findOne ({email}).then ( (user) => {
+//     if (!user) {
+//       return res.status(401).send ();
+//     }
+//     bcrypt.compare(password, user.password, (err, response) => {
+//       if (err) {
+//         return res.status(401).send ();
+//       }
+//       if (response) {
+//         var token = user.tokens[0].token;
+//         res.header('x-auth', token).status(200).send ();
+//       } else {
+//         res.status(401).send ();
+//       }
+//     })
+//    });
+
+
+// })
+
+
 
 app.listen ( port, () => {
   console.log (`Started on port ${port}`)
