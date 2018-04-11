@@ -80,7 +80,6 @@ app.patch ( '/todos/:id', (req,res) => {
     body.completedAt = null;
 
   }
-  console.log (body);
   Todo.findByIdAndUpdate (id, {$set: body}, {new: true}).then ((todo) => {
     if (!todo) {
       return res.status(404).send ();
@@ -101,7 +100,6 @@ app.post ('/users', (req, res) => {
 }).then ((token) => {
    res.header('x-auth', token).send (user);
 }).catch ((e) => {
-    console.log (e);
     res.status(400).send (e);
 });
 

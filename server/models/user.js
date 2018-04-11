@@ -57,7 +57,9 @@ UserSchema.statics.findByToken = function (token) {
   try {
     decoded = jwt.verify (token, 'abc123');
   } catch (e) {
-    return new Promise.reject();
+    return new Promise( (resolve, reject)  => {
+      reject ();
+    });
   }
   return User.findOne ({
     '_id': decoded._id,
@@ -69,7 +71,7 @@ UserSchema.statics.findByToken = function (token) {
 
 
 UserSchema.pre('save', function (next) {
-  user = this;
+  const user = this;
   if (user.isModified('password'))  {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash (user.password, salt, (err, hash) => {
